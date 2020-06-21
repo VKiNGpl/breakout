@@ -78,7 +78,8 @@ function Brick:init(x, y)
 
     -- spread of particles; normal looks more natural than uniform, which is clumpy; numbers
     -- are amount of standard deviation away in X and Y axis
-    self.psystem:setAreaSpread('normal', 10, 10)
+    -- 6.21.2020 updated deprecated function setAreaSpread to setEmissionArea
+    self.psystem:setEmissionArea('normal', 10, 10)
 end
 
 --[[
