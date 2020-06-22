@@ -23,6 +23,7 @@ function ServeState:enter(params)
     self.health = params.health
     self.score = params.score
     self.level = params.level
+    self.highScores = params.highScores
 
     -- init new ball (random color for fun)
     self.ball = Ball()
@@ -43,7 +44,8 @@ function ServeState:update(dt)
             health = self.health,
             score = self.score,
             ball = self.ball,
-            level = self.level
+            level = self.level,
+            highScores = self.highScores
         })
     end
 

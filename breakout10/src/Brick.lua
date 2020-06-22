@@ -20,39 +20,37 @@ Brick = Class{}
 paletteColors = {
     -- blue
     [1] = {
-        [1] = {
-            ['r'] = 0.388,
-            ['g'] = 0.608,
-            ['b'] = 1
-        },
-        -- green
-        [2] = {
-            ['r'] = 0.416,
-            ['g'] = 0.745,
-            ['b'] = 0.184
-        },
-        -- red
-        [3] = {
-            ['r'] = 0.851,
-            ['g'] = 0.341,
-            ['b'] = 0.388
-        },
-        -- purple
-        [4] = {
-            ['r'] = 0.843,
-            ['g'] = 0.482,
-            ['b'] = 0.729
-        },
-        -- gold
-        [5] = {
-            ['r'] = 0.984,
-            ['g'] = 0.949,
-            ['b'] = 0.212
+        ['r'] = 0.388,
+        ['g'] = 0.608,
+        ['b'] = 1
+    },
+    -- green
+    [2] = {
+        ['r'] = 0.416,
+        ['g'] = 0.745,
+        ['b'] = 0.184
+    },
+    -- red
+    [3] = {
+        ['r'] = 0.851,
+        ['g'] = 0.341,
+        ['b'] = 0.388
+    },
+    -- purple
+    [4] = {
+        ['r'] = 0.843,
+        ['g'] = 0.482,
+        ['b'] = 0.729
+    },
+    -- gold
+    [5] = {
+        ['r'] = 0.984,
+        ['g'] = 0.949,
+        ['b'] = 0.212
     }
 }
-
 function Brick:init(x, y)
-    -- used for coloring and score calculation
+    -- sed for coloring and score calculation
     self.tier = 0
     self.color = 1
     
@@ -78,7 +76,7 @@ function Brick:init(x, y)
     self.psystem:setLinearAcceleration(-15, 0, 15, 80)
 
     -- spread of particles; normal looks more natural than uniform
-    self.psystem:setAreaSpread('normal', 10, 10)
+    self.psystem:setEmissionArea('normal', 10, 10)
 end
 
 --[[
