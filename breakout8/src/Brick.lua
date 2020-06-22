@@ -20,33 +20,33 @@ Brick = Class{}
 paletteColors = {
     -- blue
     [1] = {
-        ['r'] = 99,
-        ['g'] = 155,
-        ['b'] = 255
+        ['r'] = 0.388,
+        ['g'] = 0.608,
+        ['b'] = 1
     },
     -- green
     [2] = {
-        ['r'] = 106,
-        ['g'] = 190,
-        ['b'] = 47
+        ['r'] = 0.416,
+        ['g'] = 0.745,
+        ['b'] = 0.184
     },
     -- red
     [3] = {
-        ['r'] = 217,
-        ['g'] = 87,
-        ['b'] = 99
+        ['r'] = 0.851,
+        ['g'] = 0.341,
+        ['b'] = 0.388
     },
     -- purple
     [4] = {
-        ['r'] = 215,
-        ['g'] = 123,
-        ['b'] = 186
+        ['r'] = 0.843,
+        ['g'] = 0.482,
+        ['b'] = 0.729
     },
     -- gold
     [5] = {
-        ['r'] = 251,
-        ['g'] = 242,
-        ['b'] = 54
+        ['r'] = 0.984,
+        ['g'] = 0.949,
+        ['b'] = 0.212
     }
 }
 
@@ -80,6 +80,7 @@ function Brick:init(x, y)
     -- are amount of standard deviation away in X and Y axis
     -- 6.21.2020 updated deprecated function setAreaSpread to setEmissionArea
     self.psystem:setEmissionArea('normal', 10, 10)
+
 end
 
 --[[
@@ -100,7 +101,7 @@ function Brick:hit()
         paletteColors[self.color].b,
         0
     )
-    self.psystem:emit(64)
+    self.psystem:emit(32)
 
     -- sound on hit
     gSounds['brick-hit-2']:stop()
