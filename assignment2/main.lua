@@ -34,7 +34,7 @@ function love.load()
     -- set love's default filter to "nearest-neighbor", which essentially
     -- means there will be no filtering of pixels (blurriness), which is
     -- important for a nice crisp, 2D look
-    --love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setDefaultFilter('nearest', 'nearest')
 
     -- seed the RNG so that calls to random are always random
     math.randomseed(os.time())
