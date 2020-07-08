@@ -117,7 +117,7 @@ function LevelMaker.createMap(level)
             -- Lua's version of the 'continue' statement
             ::continue::
         end
-    end 
+    end
 
     -- in the event we didn't generate any bricks, try again
     if #bricks == 0 then

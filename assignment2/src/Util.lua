@@ -49,6 +49,23 @@ function table.slice(tbl, first, last, step)
     return sliced
 end
 
+function GenerateQuadsPowerups(atlas)
+    local x = 0
+    local y = 192
+
+    local counter = 1
+    local quads = {}
+
+    for i = 0, 9 do
+        quads[counter] = love.graphics.newQuad(x, y, 16, 16, atlas:getDimensions())
+        counter = counter + 1
+        x = x + 16
+        y = 192
+    end
+
+    return quads
+end
+
 --[[
     This function is specifically made to piece out the bricks from the
     sprite sheet. Since the sprite sheet has non-uniform sprites within,

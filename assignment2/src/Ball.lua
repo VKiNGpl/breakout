@@ -15,15 +15,18 @@
 
 Ball = Class{}
 
-function Ball:init(skin)
+function Ball:init(paddlePos, paddleWidth, skin)
     -- simple positional and dimensional variables
     self.width = 8
     self.height = 8
 
+    self.x = paddlePos + paddleWidth / 2
+    self.y = VIRTUAL_HEIGHT / 2 + 80
+
     -- these variables are for keeping track of our velocity on both the
     -- X and Y axis, since the ball can move in two dimensions
-    self.dy = 0
-    self.dx = 0
+    self.dx = math.random(-200, 200)
+    self.dy = math.random(-50, -60)
 
     -- this will effectively be the color of our ball, and we will index
     -- our table of Quads relating to the global block texture using this
