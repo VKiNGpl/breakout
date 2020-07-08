@@ -13,7 +13,6 @@
     preparation for the serve, including our current health and score, as
     well as the level we're on.
 ]]
-local balls = {}
 
 ServeState = Class{__includes = BaseState}
 
@@ -26,13 +25,13 @@ function ServeState:enter(params)
     self.highScores = params.highScores
     self.level = params.level
     self.recoverPoints = params.recoverPoints
-    self.balls = balls
+    self.growPoints = params.growPoints
+    self.balls = {}
 
     -- init new ball (random color for fun)
     self.ball = Ball(self.paddle.x, self.paddle.width)
     self.ball.skin = math.random(7)
-    
-    table.insert( balls, self.ball)
+    table.insert( self.balls, self.ball)
 end
 
 function ServeState:update(dt)
@@ -52,7 +51,8 @@ function ServeState:update(dt)
             ball = self.ball,
             balls = self.balls,
             level = self.level,
-            recoverPoints = self.recoverPoints
+            recoverPoints = self.recoverPoints,
+            growPoints = self.growPoints
         })
     end
 

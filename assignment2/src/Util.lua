@@ -72,7 +72,10 @@ end
     we have to return a subset of GenerateQuads.
 ]]
 function GenerateQuadsBricks(atlas)
-    return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+    local spritesheet = table.slice(GenerateQuads(atlas, 32, 16), 1, 24) --24 is locked brick
+    table.remove(spritesheet, 22)
+    table.remove(spritesheet, 22)
+    return spritesheet
 end
 
 --[[

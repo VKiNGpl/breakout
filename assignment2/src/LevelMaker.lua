@@ -45,7 +45,9 @@ function LevelMaker.createMap(level)
     local highestTier = math.min(3, math.floor(level / 5))
 
     -- highest color of the highest tier, no higher than 5
-    local highestColor = math.min(5, level % 5 + 3)
+    local highestColor = math.min(5, level % 3 + 1)
+
+    local levelLocked = false
 
     -- lay out bricks such that they touch each other and fill the space
     for y = 1, numRows do
@@ -117,6 +119,17 @@ function LevelMaker.createMap(level)
             -- Lua's version of the 'continue' statement
             ::continue::
         end
+    end
+
+    if math.random( math.min(level, 10 ), 20 ) > 13 then
+        levelLocked = true
+    end
+
+    if levelLocked then
+        local lockedBrick = math.random( 1, #bricks )
+        bricks[lockedBrick].isLocked = true
+        bricks[lockedBrick].tier = 0
+        bricks[lockedBrick].color = 1
     end
 
     -- in the event we didn't generate any bricks, try again

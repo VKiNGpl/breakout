@@ -15,10 +15,6 @@
 ]]
 
 -- create powerups table to hold active powers ups only
-local powerups = {}
-local powerupActive = {
-    ['balls'] = false
-}
 
 PlayState = Class{__includes = BaseState}
 
@@ -35,9 +31,11 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.balls = params.balls
     self.level = params.level
-    self.powerups = powerups
-
-    self.recoverPoints = 5000
+    self.powerups = {}
+    self.keySpawned = false
+    self.keyActive = false
+    self.growPoints = params.growPoints
+    self.recoverPoints = params.recoverPoints
 end
 
 function PlayState:update(dt)
@@ -96,9 +94,16 @@ function PlayState:update(dt)
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
-                if math.random( 1 ) == 1 then
+                if math.random( 10 ) < 3 then
                     self.powerup = Powerup(brick.x, brick.y, 7, brick.color)
-                    table.insert(powerups, self.powerup)
+                    table.insert(self.powerups, self.powerup)
+                end
+                
+                if math.random( 30 ) < 6 and not self.keySpawned and not self.keyActive and not brick.keyActive then
+                    self.powerup = Powerup(brick.x, brick.y, 10, brick.color)
+                    self.powerup.isKey = true
+                    self.keySpawned = true
+                    table.insert(self.powerups, self.powerup)
                 end
 
                 -- trigger the brick's hit function, which removes it from play
@@ -110,17 +115,21 @@ function PlayState:update(dt)
                     self.health = math.min(3, self.health + 1)
 
                     -- multiply recover points by 2
-                    self.recoverPoints = math.min(100000, self.recoverPoints * 2)
+                    self.recoverPoints = math.min(25000, self.recoverPoints * 2)
 
                     -- play recover sound effect
                     gSounds['recover']:play()
                 end
 
+                if self.score > self.growPoints then
+                    self.paddle:grow(self.paddle.size)
+                    gSounds['grow']:play()
+                    self.growPoints = math.min(10000, self.growPoints * 2)
+                end
+
                 -- go to our victory screen if there are no more bricks left
                 if self:checkVictory() then
                     gSounds['victory']:play()
-                    self.balls = {}
-                    self.ball = {}
 
                     gStateMachine:change('victory', {
                         level = self.level,
@@ -128,9 +137,9 @@ function PlayState:update(dt)
                         health = self.health,
                         score = self.score,
                         highScores = self.highScores,
-                        ball = self.ball,
                         balls = self.balls,
-                        recoverPoints = self.recoverPoints
+                        recoverPoints = self.recoverPoints,
+                        growPoints = self.growPoints
                     })
                 end
 
@@ -190,10 +199,11 @@ function PlayState:update(dt)
             gSounds['hurt']:play()
         elseif #self.balls == 1 and ball.y >= VIRTUAL_HEIGHT then
             self.health = self.health - 1
-            powerups = {}
+            --self.powerups = {}
             powerupActive = false
             gSounds['hurt']:play()
             table.remove(self.balls, b)
+            self.paddle:shrink(self.paddle.size)
 
             if self.health == 0 then
                 gStateMachine:change('game-over', {
@@ -210,7 +220,8 @@ function PlayState:update(dt)
                     score = self.score,
                     highScores = self.highScores,
                     level = self.level,
-                    recoverPoints = self.recoverPoints
+                    recoverPoints = self.recoverPoints,
+                    growPoints = self.growPoints
                 })
             end
         end
@@ -225,8 +236,15 @@ function PlayState:update(dt)
         for p, powerup in pairs(self.powerups) do
             powerup:update(dt)
             if powerup:collides(self.paddle) then
-                table.remove( powerups, p )
-                if not powerupActive then
+                if powerup.isKey then
+                    self.keySpawned = false
+                    self.keyActive = true
+                    for b, brick in pairs(self.bricks) do
+                        brick.keyActive = true
+                    end
+                end
+                table.remove( self.powerups, p )
+                if not powerupActive and not powerup.isKey then
                     self.ball = Ball(self.paddle.x, self.paddle.width, self.balls[1].skin)
                     table.insert(self.balls, self.ball)
                     self.ball = Ball(self.paddle.x, self.paddle.width, self.balls[1].skin)
@@ -267,7 +285,10 @@ function PlayState:render()
         end
         if self.powerup.y > 230 then
             self.powerup.falling = false
-            table.remove( powerups, 1 )
+            if self.powerup.isKey then
+                self.keySpawned = false
+            end
+            table.remove( self.powerups, 1 )
         end
     end
 end

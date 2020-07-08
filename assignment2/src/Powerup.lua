@@ -45,7 +45,7 @@ function Powerup:init(brickX, brickY, skin, color)
 
     self.falling = true
     self.isCaught = false
-    self.isActive = false
+    self.isKey = false
 
     self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 10)
     self.psystem:setParticleLifetime(0.5, 1)
@@ -60,13 +60,6 @@ function Powerup:update(dt)
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
     self.psystem:update(dt)
-end
-
-function Powerup:log()
-    print('I am powerup!')
-    print('At location x: ' .. self.x .. ' y: ' .. self.y)
-    print('Skin number: ' .. self.skin)
-    print('Caught: ' .. tostring(self.isCaught))
 end
 
 function Powerup:render()
@@ -107,6 +100,8 @@ function Powerup:collides(target)
     end 
 
     -- if the above aren't true, they're overlapping
+
     self.isCaught = true
+
     return true
 end
