@@ -31,6 +31,7 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.balls = params.balls
     self.level = params.level
+    self.levelLocked = false
     self.powerups = {}
     self.keySpawned = false
     self.keyActive = false
@@ -93,13 +94,19 @@ function PlayState:update(dt)
 
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
+                if brick.isLocked and not brick.keyActive then
+                    self.score = self.score
+                elseif brick.isLocked and brick.keyActive then
+                    self.score = self.score + self.level * 1000
+                end
 
-                if math.random( 10 ) < 3 then
+                if math.random( 10 ) < 2 then
                     self.powerup = Powerup(brick.x, brick.y, 7, brick.color)
                     table.insert(self.powerups, self.powerup)
                 end
                 
-                if math.random( 30 ) < 6 and not self.keySpawned and not self.keyActive and not brick.keyActive then
+                if math.random( 30 ) < 4 and self.levelLocked and not self.keySpawned 
+                                        and not self.keyActive and not brick.keyActive then
                     self.powerup = Powerup(brick.x, brick.y, 10, brick.color)
                     self.powerup.isKey = true
                     self.keySpawned = true
@@ -115,7 +122,7 @@ function PlayState:update(dt)
                     self.health = math.min(3, self.health + 1)
 
                     -- multiply recover points by 2
-                    self.recoverPoints = math.min(25000, self.recoverPoints * 2)
+                    self.recoverPoints = self.recoverPoints + math.min(25000, self.recoverPoints)
 
                     -- play recover sound effect
                     gSounds['recover']:play()
@@ -124,7 +131,7 @@ function PlayState:update(dt)
                 if self.score > self.growPoints then
                     self.paddle:grow(self.paddle.size)
                     gSounds['grow']:play()
-                    self.growPoints = math.min(10000, self.growPoints * 2)
+                    self.growPoints = self.growPoints + math.min(10000, self.growPoints)
                 end
 
                 -- go to our victory screen if there are no more bricks left
@@ -230,6 +237,9 @@ function PlayState:update(dt)
     -- for rendering particle systems
     for k, brick in pairs(self.bricks) do
         brick:update(dt)
+        if brick.isLocked then
+            self.levelLocked = true
+        end
     end
     
     if self.powerup then
